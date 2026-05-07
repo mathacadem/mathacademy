@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Academy | Mr. Mohamed Saad</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #181824;
+  --bg2: #1e1e2e;
+  --bg3: #252538;
+  --surface: rgba(255,255,255,0.05);
+  --surface2: rgba(255,255,255,0.09);
+  --border: rgba(255,255,255,0.1);
+  --text: #f0f0f8;
+  --text2: #9090b8;
+  --accent: #fd8c00;
+  --accent2: #e84393;
+  --accent3: #22bcd4;
+  --gold: #ffd347;
+  --success: #31c560;
+  --grad: linear-gradient(135deg, #fd8c00, #e84393);
+  --grad2: linear-gradient(135deg, #e84393, #22bcd4);
+  --grad3: linear-gradient(135deg, #22bcd4, #6f42c1);
+  --font-main: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-ar: 'Cairo', sans-serif;
+  --radius: 16px;
+  --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-theme="light"] {
+  --bg: #f8f8ff;
+  --bg2: #eeeef8;
+  --bg3: #e2e2f5;
+  --surface: rgba(255,255,255,0.8);
+  --surface2: rgba(255,255,255,0.95);
+  --border: rgba(253,140,0,0.15);
+  --text: #181824;
+  --text2: #555575;
+  --shadow: 0 20px 60px rgba(253,140,0,0.12);
+}
+[data-lang="ar"] { font-family: var(--font-ar) !important; direction: rtl; }
+[data-lang="ar"] * { font-family: var(--font-ar) !important; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* ─── LOADING ─── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 20px;
+}
+.loader-logo {
+  font-family: var(--font-main);
+  font-size: 2.5rem; font-weight: 800;
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: pulse 1s ease-in-out infinite;
+}
+.loader-bar {
+  width: 200px; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden;
+}
+.loader-fill {
+  height: 100%; background: var(--grad); border-radius: 99px;
+  animation: loadFill 1.8s ease forwards;
+}
+@keyframes loadFill { from{width:0} to{width:100%} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.loader-hide { animation: fadeOut 0.5s ease forwards; }
+@keyframes fadeOut { to{opacity:0; pointer-events:none} }
+
+/* ─── SCROLL PROGRESS ─── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: var(--grad); width: 0%; transition: width 0.1s;
+}
+
+/* ─── NAVBAR ─── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 900;
+  padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(7,11,20,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition);
+}
+[data-theme="light"] nav { background: rgba(248,248,255,0.88); }
+nav::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--grad); z-index: 1;
+}
+.nav-logo {
+  font-family: var(--font-main);
+  font-size: 1.4rem; font-weight: 800;
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex; gap: 8px; list-style: none; align-items: center;
+}
+.nav-links a {
+  color: var(--text2); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+  padding: 7px 14px; border-radius: 8px;
+  transition: var(--transition); white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface2); }
+.nav-controls {
+  display: flex; gap: 8px; align-items: center;
+}
+.nav-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2); cursor: pointer; border-radius: 8px;
+  padding: 7px 12px; font-size: 0.8rem; font-weight: 600;
+  transition: var(--transition); display: flex; align-items: center; gap: 6px;
+}
+.nav-btn:hover { background: var(--surface2); color: var(--text); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  background: none; border: none; padding: 6px;
+}
+.hamburger span { width: 22px; height: 2px; background: var(--text2); border-radius: 2px; transition: var(--transition); }
+
+/* ─── MOBILE MENU ─── */
+.mobile-menu {
+  display: none; position: fixed; top: 65px; inset-inline: 0; z-index: 899;
+  background: rgba(7,11,20,0.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  flex-direction: column; padding: 20px;
+  transform: translateY(-10px); opacity: 0;
+  transition: var(--transition);
+}
+.mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+.mobile-menu a {
+  color: var(--text2); text-decoration: none; padding: 12px 16px;
+  border-radius: 10px; font-weight: 500; transition: var(--transition);
+}
+.mobile-menu a:hover { background: var(--surface2); color: var(--text); }
+
+/* ─── HERO ─── */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 120px 40px 80px;
+}
+.hero-canvas {
+  position: absolute; inset: 0; z-index: 0;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 800px; text-align: center;
+  animation: heroIn 1s ease 0.3s both;
+}
+@keyframes heroIn { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:none} }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid rgba(253,140,0,0.3);
+  padding: 8px 18px; border-radius: 99px;
+  font-size: 0.8rem; font-weight: 600; color: var(--accent);
+  margin-bottom: 28px;
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+.hero-badge i { animation: spin 3s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.hero-h1 {
+  font-family: var(--font-main);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800; line-height: 1.05;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.8s ease 0.7s both;
+}
+.hero-h1 .grd {
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 1.1rem; color: var(--text2); line-height: 1.7;
+  max-width: 600px; margin: 0 auto 40px;
+  animation: fadeInUp 0.8s ease 0.9s both;
+}
+.hero-btns {
+  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease 1.1s both;
+}
+.btn-primary {
+  background: var(--grad); color: #fff;
+  padding: 14px 30px; border-radius: 12px; font-weight: 700;
+  border: none; cursor: pointer; font-size: 0.95rem;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--transition);
+  box-shadow: 0 8px 30px rgba(253,140,0,0.35);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(253,140,0,0.5); }
+.btn-outline {
+  background: var(--surface); color: var(--text);
+  padding: 14px 30px; border-radius: 12px; font-weight: 600;
+  border: 1px solid var(--border); cursor: pointer; font-size: 0.95rem;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--transition);
+}
+.btn-outline:hover { background: var(--surface2); transform: translateY(-3px); }
+.btn-wa {
+  background: linear-gradient(135deg,#25d366,#128c7e); color: #fff;
+  padding: 14px 30px; border-radius: 12px; font-weight: 700;
+  border: none; cursor: pointer; font-size: 0.95rem;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--transition);
+  box-shadow: 0 8px 30px rgba(37,211,102,0.3);
+}
+.btn-wa:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37,211,102,0.45); }
+
+/* ─── SECTION BASE ─── */
+section { padding: 100px 40px; position: relative; }
+.section-header { text-align: center; margin-bottom: 60px; }
+.section-tag {
+  display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); background: rgba(253,140,0,0.1); border: 1px solid rgba(253,140,0,0.25);
+  padding: 6px 16px; border-radius: 99px; margin-bottom: 14px;
+}
+.section-title {
+  font-family: var(--font-main); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+  margin-bottom: 14px;
+}
+.section-desc { color: var(--text2); font-size: 1.05rem; line-height: 1.7; max-width: 560px; margin: 0 auto; }
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ─── ABOUT ─── */
+#about { background: var(--bg2); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.about-visual {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.about-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 40px; text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.about-card::before {
+  content: ''; position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(253,140,0,0.06), transparent 60%);
+}
+.teacher-icon {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; margin: 0 auto 20px;
+  box-shadow: 0 10px 30px rgba(253,140,0,0.35);
+}
+.teacher-name { font-family: var(--font-main); font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+.teacher-title { color: var(--accent3); font-size: 0.85rem; font-weight: 500; margin-bottom: 20px; }
+.teacher-stats {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+}
+.t-stat {
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 10px 16px; border-radius: 10px; text-align: center;
+}
+.t-stat strong { display: block; font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+.t-stat span { font-size: 0.72rem; color: var(--text2); }
+.about-text h2 { font-family: var(--font-main); font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; }
+.about-text p { color: var(--text2); line-height: 1.8; margin-bottom: 16px; }
+.about-features { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.about-features li {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text2); font-size: 0.95rem;
+}
+.about-features li i { color: var(--accent); width: 20px; }
+
+/* ─── COURSES ─── */
+#courses { background: var(--bg); }
+.courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.course-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; cursor: pointer;
+  transition: var(--transition); position: relative; overflow: hidden;
+}
+.course-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--grad); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.course-card:hover::before { transform: scaleX(1); }
+.course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); background: var(--surface2); }
+.course-icon {
+  width: 52px; height: 52px; border-radius: 14px; background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 18px;
+  box-shadow: 0 6px 20px rgba(253,140,0,0.3);
+}
+.course-card h3 { font-family: var(--font-main); font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.course-card p { color: var(--text2); font-size: 0.88rem; line-height: 1.6; margin-bottom: 20px; }
+.course-tag {
+  display: inline-block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 4px 10px; border-radius: 6px; background: rgba(253,140,0,0.1); color: var(--accent);
+  border: 1px solid rgba(253,140,0,0.25); margin-bottom: 14px;
+}
+.btn-sm {
+  background: none; border: 1px solid var(--border); color: var(--text2);
+  padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-sm:hover { background: var(--grad); border-color: transparent; color: #fff; }
+
+/* ─── WHY ─── */
+#why { background: var(--bg2); }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.why-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  transition: var(--transition);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.why-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.why-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+}
+.why-card h3 { font-family: var(--font-main); font-size: 1rem; font-weight: 700; }
+.why-card p { color: var(--text2); font-size: 0.87rem; line-height: 1.6; }
+
+/* ─── STATS ─── */
+#stats {
+  background: var(--bg);
+  position: relative; overflow: hidden;
+}
+#stats::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(253,140,0,0.07), transparent 70%);
+}
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; position: relative; z-index: 1; }
+.stat-card {
+  text-align: center; padding: 40px 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.stat-number {
+  font-family: var(--font-main); font-size: 3rem; font-weight: 800;
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block; line-height: 1;
+}
+.stat-label { color: var(--text2); font-size: 0.9rem; margin-top: 8px; }
+
+/* ─── REVIEWS ─── */
+#reviews { background: var(--bg2); }
+.reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.review-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  transition: var(--transition); position: relative;
+}
+.review-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.review-quote { font-size: 2.5rem; color: var(--accent); line-height: 1; margin-bottom: 14px; }
+.review-text { color: var(--text2); font-size: 0.92rem; line-height: 1.7; margin-bottom: 20px; }
+.review-author { display: flex; align-items: center; gap: 12px; }
+.review-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.review-name { font-weight: 700; font-size: 0.9rem; }
+.review-info { color: var(--text2); font-size: 0.78rem; margin-top: 2px; }
+.stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 2px; }
+
+/* ─── BOOKING ─── */
+#booking { background: var(--bg); }
+.booking-wrapper {
+  max-width: 700px; margin: 0 auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 50px; backdrop-filter: blur(10px);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group input, .form-group select, .form-group textarea {
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); padding: 12px 16px; border-radius: 10px;
+  font-family: inherit; font-size: 0.92rem;
+  transition: var(--transition); outline: none; resize: none;
+}
+[data-lang="ar"] .form-group input,
+[data-lang="ar"] .form-group select,
+[data-lang="ar"] .form-group textarea {
+  font-family: var(--font-ar);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,124,248,0.15);
+}
+.form-group select option { background: var(--bg2); }
+
+/* ─── FAQ ─── */
+#faq { background: var(--bg2); }
+.faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: var(--transition);
+}
+.faq-q {
+  width: 100%; background: none; border: none; color: var(--text);
+  padding: 20px 24px; font-size: 0.97rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  transition: var(--transition);
+}
+[data-lang="ar"] .faq-q { text-align: right; font-family: var(--font-ar); }
+.faq-q i { color: var(--accent); transition: transform 0.35s ease; flex-shrink: 0; }
+.faq-item.open .faq-q i { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease;
+  color: var(--text2); font-size: 0.92rem; line-height: 1.7;
+  padding: 0 24px;
+}
+.faq-item.open .faq-a { max-height: 300px; padding: 0 24px 20px; }
+
+/* ─── BLOG ─── */
+#blog { background: var(--bg); }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.blog-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: var(--transition);
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.blog-thumb {
+  height: 180px; background: var(--grad2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; position: relative; overflow: hidden;
+}
+.blog-thumb::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg,rgba(79,124,248,0.3),rgba(124,95,245,0.3));
+}
+.blog-body { padding: 22px; }
+.blog-meta { color: var(--accent3); font-size: 0.76rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+.blog-card h3 { font-family: var(--font-main); font-size: 1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+.blog-card p { color: var(--text2); font-size: 0.86rem; line-height: 1.6; }
+
+/* ─── SCHEDULE ─── */
+#schedule { background: var(--bg2); }
+.schedule-table {
+  max-width: 800px; margin: 0 auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.schedule-row {
+  display: grid; grid-template-columns: 1fr 2fr 1fr;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+  align-items: center; transition: var(--transition);
+}
+.schedule-row:hover { background: var(--surface2); }
+.schedule-row:last-child { border-bottom: none; }
+.schedule-row.header { background: var(--bg3); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); }
+.schedule-day { font-weight: 600; color: var(--accent); }
+.schedule-time { color: var(--text2); font-size: 0.9rem; }
+.badge {
+  display: inline-block; padding: 4px 10px; border-radius: 6px;
+  font-size: 0.75rem; font-weight: 600; text-align: center;
+}
+.badge-open { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+.badge-few { background: rgba(248,200,79,0.15); color: var(--gold); border: 1px solid rgba(248,200,79,0.3); }
+.badge-full { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+/* ─── CERTIFICATES ─── */
+#certs { background: var(--bg); }
+.certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.cert-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 20px; text-align: center;
+  transition: var(--transition);
+}
+.cert-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.cert-icon { font-size: 2.5rem; margin-bottom: 14px; }
+.cert-card h3 { font-family: var(--font-main); font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+.cert-card p { color: var(--text2); font-size: 0.82rem; }
+
+/* ─── NEWSLETTER ─── */
+#newsletter {
+  background: var(--bg2);
+  text-align: center;
+}
+.newsletter-box {
+  max-width: 540px; margin: 0 auto;
+}
+.newsletter-form {
+  display: flex; gap: 12px; margin-top: 28px;
+}
+.newsletter-form input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 14px 18px; border-radius: 12px;
+  font-size: 0.92rem; font-family: inherit; outline: none;
+  transition: var(--transition);
+}
+.newsletter-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,124,248,0.15); }
+
+/* ─── CONTACT ─── */
+#contact { background: var(--bg); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+.contact-info h2 { font-family: var(--font-main); font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
+.contact-info p { color: var(--text2); line-height: 1.8; margin-bottom: 28px; }
+.contact-items { display: flex; flex-direction: column; gap: 14px; }
+.contact-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+}
+.contact-item-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--grad); display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.contact-item-text span { display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+.contact-item-text a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.socials { display: flex; gap: 10px; margin-top: 24px; }
+.social-btn {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text2); text-decoration: none; font-size: 1rem;
+  transition: var(--transition);
+}
+.social-btn:hover { background: var(--grad); border-color: transparent; color: #fff; transform: translateY(-3px); }
+.contact-map-placeholder {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; height: 100%; min-height: 300px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; color: var(--text2);
+}
+.contact-map-placeholder i { font-size: 2.5rem; color: var(--accent); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 60px 40px 30px;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+.footer-brand .nav-logo { font-size: 1.3rem; display: inline-block; margin-bottom: 14px; }
+.footer-brand p { color: var(--text2); font-size: 0.88rem; line-height: 1.7; max-width: 260px; }
+.footer-col h4 { font-family: var(--font-main); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text2); margin-bottom: 16px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { color: var(--text2); text-decoration: none; font-size: 0.88rem; transition: var(--transition); }
+.footer-col ul li a:hover { color: var(--text); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  color: var(--text2); font-size: 0.82rem;
+}
+.footer-bottom span span { color: var(--accent); }
+
+/* ─── FLOATING WA ─── */
+#wa-float {
+  position: fixed; bottom: 28px; right: 28px; z-index: 888;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg,#25d366,#128c7e);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.5rem; text-decoration: none;
+  box-shadow: 0 8px 25px rgba(37,211,102,0.45);
+  animation: waFloat 3s ease-in-out infinite;
+  transition: transform 0.3s;
+}
+[data-lang="ar"] #wa-float { right: auto; left: 28px; }
+#wa-float:hover { transform: scale(1.12); }
+@keyframes waFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+/* ─── BACK TO TOP ─── */
+#back-top {
+  position: fixed; bottom: 28px; left: 28px; z-index: 888;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2); display: none; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem; transition: var(--transition);
+}
+[data-lang="ar"] #back-top { left: auto; right: 28px; }
+#back-top.show { display: flex; }
+#back-top:hover { background: var(--grad); border-color: transparent; color: #fff; }
+
+/* ─── AI CHAT ─── */
+#ai-chat {
+  position: fixed; bottom: 96px; right: 28px; z-index: 887;
+}
+[data-lang="ar"] #ai-chat { right: auto; left: 28px; }
+.chat-toggle {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--grad); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.3rem;
+  box-shadow: 0 6px 20px rgba(253,140,0,0.4);
+  transition: var(--transition);
+}
+.chat-toggle:hover { transform: scale(1.1); }
+.chat-window {
+  position: absolute; bottom: 64px; right: 0;
+  width: 320px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden; box-shadow: var(--shadow);
+  display: none; flex-direction: column;
+}
+[data-lang="ar"] .chat-window { right: auto; left: 0; }
+.chat-window.open { display: flex; }
+.chat-header {
+  padding: 16px 20px; background: var(--grad);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.chat-header span { color: #fff; font-weight: 700; font-size: 0.9rem; }
+.chat-close { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 1rem; }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px; min-height: 200px; max-height: 280px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.msg {
+  padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; max-width: 85%;
+}
+.msg.bot { background: var(--surface); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+[data-lang="ar"] .msg.bot { align-self: flex-end; border-bottom-left-radius: 12px; border-bottom-right-radius: 4px; }
+.msg.user { background: var(--grad); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+[data-lang="ar"] .msg.user { align-self: flex-start; border-bottom-right-radius: 12px; border-bottom-left-radius: 4px; }
+.chat-input-row {
+  display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border);
+}
+.chat-input-row input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 14px; border-radius: 10px;
+  font-size: 0.85rem; font-family: inherit; outline: none;
+}
+.chat-input-row button {
+  background: var(--grad); border: none; color: #fff;
+  width: 38px; height: 38px; border-radius: 10px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); flex-shrink: 0;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 12px 20px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 70px 20px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  #hero { padding: 100px 20px 60px; }
+}
+@media (max-width: 600px) {
+  .hero-btns { flex-direction: column; align-items: center; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .booking-wrapper { padding: 30px 20px; }
+  .newsletter-form { flex-direction: column; }
+  .schedule-row { grid-template-columns: 1fr 1fr; }
+  .schedule-row .schedule-time { display: none; }
+}
+
+/* ─── PRICING ─── */
+#pricing { background: var(--bg2); }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: stretch; }
+.pricing-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 32px;
+  display: flex; flex-direction: column; gap: 20px;
+  transition: var(--transition); position: relative; overflow: hidden;
+}
+.pricing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.pricing-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(253,140,0,0.08), rgba(232,67,147,0.08));
+}
+.pricing-card.featured::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(253,140,0,0.04), transparent);
+  pointer-events: none;
+}
+.pricing-badge {
+  display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; padding: 5px 12px; border-radius: 99px;
+  background: rgba(253,140,0,0.12); color: var(--accent);
+  border: 1px solid rgba(253,140,0,0.25); width: fit-content;
+}
+.featured-badge {
+  background: var(--grad); color: #fff; border-color: transparent;
+}
+.pricing-icon { font-size: 2rem; }
+.pricing-name { font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; }
+.pricing-price { display: flex; align-items: baseline; gap: 4px; }
+.price-amount { font-family: var(--font-main); font-size: 3rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.price-per { color: var(--text2); font-size: 0.9rem; }
+.pricing-duration {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--accent3); font-size: 0.88rem; font-weight: 600;
+  background: rgba(34,188,212,0.1); border: 1px solid rgba(34,188,212,0.2);
+  padding: 8px 14px; border-radius: 8px; width: fit-content;
+}
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.pricing-features li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text2); }
+.pricing-features li i { color: var(--success); font-size: 0.8rem; flex-shrink: 0; }
+
+/* ─── SEARCH BAR ─── */
+.search-overlay {
+  position: fixed; inset: 0; z-index: 950;
+  background: rgba(7,11,20,0.95); backdrop-filter: blur(10px);
+  display: none; align-items: flex-start; justify-content: center;
+  padding-top: 120px;
+}
+.search-overlay.open { display: flex; }
+.search-box {
+  width: 100%; max-width: 600px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+}
+.search-input-row {
+  display: flex; align-items: center; padding: 16px 20px; gap: 12px;
+}
+.search-input-row i { color: var(--text2); font-size: 1rem; }
+.search-input-row input {
+  flex: 1; background: none; border: none; color: var(--text);
+  font-size: 1.1rem; font-family: inherit; outline: none;
+}
+.search-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loader">
+  <div class="loader-logo">∑ Math Academy</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- Scroll Progress -->
+<div id="progress-bar"></div>
+
+<!-- Search Overlay -->
+<div class="search-overlay" id="search-overlay">
+  <div class="search-box">
+    <div class="search-input-row">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search-input" placeholder="Search courses, topics..." />
+      <button class="search-close" onclick="toggleSearch()"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav>
+  <a href="#hero" class="nav-logo">∑ Math Academy</a>
+  <ul class="nav-links">
+    <li><a href="#about" data-en="About" data-ar="عن الأكاديمية">About</a></li>
+    <li><a href="#courses" data-en="Courses" data-ar="الكورسات">Courses</a></li>
+    <li><a href="#pricing" data-en="Pricing" data-ar="الأسعار">Pricing</a></li>
+    <li><a href="#why" data-en="Why Us" data-ar="لماذا نحن">Why Us</a></li>
+    <li><a href="#reviews" data-en="Reviews" data-ar="التقييمات">Reviews</a></li>
+    <li><a href="#booking" data-en="Book Session" data-ar="احجز جلسة">Book Session</a></li>
+    <li><a href="#faq" data-en="FAQ" data-ar="الأسئلة">FAQ</a></li>
+    <li><a href="#contact" data-en="Contact" data-ar="تواصل">Contact</a></li>
+  </ul>
+  <div class="nav-controls">
+    <button class="nav-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
+    <button class="nav-btn" id="theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <button class="nav-btn" id="lang-btn" onclick="toggleLang()"><i class="fas fa-globe"></i> <span id="lang-label">AR</span></button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="toggleMenu()" data-en="About" data-ar="عن الأكاديمية">About</a>
+  <a href="#courses" onclick="toggleMenu()" data-en="Courses" data-ar="الكورسات">Courses</a>
+  <a href="#pricing" onclick="toggleMenu()" data-en="Pricing" data-ar="الأسعار">Pricing</a>
+  <a href="#why" onclick="toggleMenu()" data-en="Why Us" data-ar="لماذا نحن">Why Us</a>
+  <a href="#reviews" onclick="toggleMenu()" data-en="Reviews" data-ar="التقييمات">Reviews</a>
+  <a href="#booking" onclick="toggleMenu()" data-en="Book Session" data-ar="احجز جلسة">Book Session</a>
+  <a href="#faq" onclick="toggleMenu()" data-en="FAQ" data-ar="الأسئلة">FAQ</a>
+  <a href="#contact" onclick="toggleMenu()" data-en="Contact" data-ar="تواصل">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fas fa-star"></i> <span data-en="Egypt's #1 Online Math Tutoring • $10/hr" data-ar="أفضل أكاديمية رياضيات أونلاين • 10$ للساعة">Egypt's #1 Online Math Tutoring • $10/hr</span></div>
+    <h1 class="hero-h1">
+      <span data-en="Master Mathematics" data-ar="تعلم الرياضيات">Master Mathematics</span><br>
+      <span class="grd" data-en="With Confidence" data-ar="بثقة واحترافية">With Confidence</span>
+    </h1>
+    <p class="hero-sub" data-en="Professional math tutoring for Arab and international students. Algebra, Calculus, SAT, IGCSE & more — taught by Mr. Mohamed Saad with proven methods and real results." data-ar="تدريس رياضيات احترافي للطلاب العرب والأجانب. جبر، حساب، SAT، IGCSE والمزيد — مع الأستاذ محمد سعد بأساليب مثبتة ونتائج حقيقية.">Professional math tutoring for Arab and international students. Algebra, Calculus, SAT, IGCSE & more — taught by Mr. Mohamed Saad with proven methods and real results.</p>
+    <div class="hero-btns">
+      <a href="#courses" class="btn-primary"><i class="fas fa-play"></i> <span data-en="Start Learning" data-ar="ابدأ التعلم">Start Learning</span></a>
+      <a href="#booking" class="btn-outline"><i class="fas fa-calendar"></i> <span data-en="Book Free Session" data-ar="احجز جلسة مجانية">Book Free Session</span></a>
+      <a href="https://wa.me/201159744635" target="_blank" class="btn-wa"><i class="fab fa-whatsapp"></i> <span data-en="WhatsApp Us" data-ar="واتساب">WhatsApp Us</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="about-card">
+          <div class="teacher-icon">👨‍🏫</div>
+          <div class="teacher-name">Mr. Mohamed Saad Said</div>
+          <div class="teacher-title">Professional Mathematics Teacher</div>
+          <div class="teacher-stats">
+            <div class="t-stat"><strong>10+</strong><span data-en="Years Exp." data-ar="سنوات خبرة">Years Exp.</span></div>
+            <div class="t-stat"><strong>1000+</strong><span data-en="Students" data-ar="طالب">Students</span></div>
+            <div class="t-stat"><strong>95%</strong><span data-en="Success Rate" data-ar="نسبة نجاح">Success Rate</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text reveal">
+        <div class="section-tag" data-en="About Math Academy" data-ar="عن الأكاديمية">About Math Academy</div>
+        <h2 data-en="Making Math Simple & Enjoyable" data-ar="نجعل الرياضيات سهلة وممتعة">Making Math Simple & Enjoyable</h2>
+        <p data-en="Math Academy was founded with a single mission: to make mathematics accessible, understandable, and enjoyable for every student. We believe that with the right teacher and the right method, any student can excel in math." data-ar="تأسست Math Academy بمهمة واحدة: جعل الرياضيات في متناول كل طالب وقابلة للفهم والاستمتاع. نحن نؤمن بأن مع المعلم الصحيح والمنهج الصحيح، يمكن لأي طالب التفوق في الرياضيات.">Math Academy was founded with a single mission: to make mathematics accessible, understandable, and enjoyable for every student. We believe that with the right teacher and the right method, any student can excel in math.</p>
+        <p data-en="Mr. Mohamed Saad has over 10 years of experience teaching students from Egypt, Saudi Arabia, UAE, UK and more. Specializing in IGCSE, SAT, American and National curricula." data-ar="الأستاذ محمد سعد لديه أكثر من 10 سنوات خبرة في تدريس الطلاب من مصر والسعودية والإمارات والمملكة المتحدة وغيرها. متخصص في مناهج IGCSE وSAT والأمريكي والوطني.">Mr. Mohamed Saad has over 10 years of experience teaching students from Egypt, Saudi Arabia, UAE, UK and more. Specializing in IGCSE, SAT, American and National curricula.</p>
+        <ul class="about-features">
+          <li><i class="fas fa-check-circle"></i> <span data-en="Personalized one-on-one sessions" data-ar="جلسات فردية مخصصة">Personalized one-on-one sessions</span></li>
+          <li><i class="fas fa-check-circle"></i> <span data-en="Flexible scheduling — your timezone" data-ar="مواعيد مرنة حسب منطقتك الزمنية">Flexible scheduling — your timezone</span></li>
+          <li><i class="fas fa-check-circle"></i> <span data-en="Recorded sessions for revision" data-ar="جلسات مسجلة للمراجعة">Recorded sessions for revision</span></li>
+          <li><i class="fas fa-check-circle"></i> <span data-en="Homework and exam support" data-ar="دعم الواجبات والامتحانات">Homework and exam support</span></li>
+          <li><i class="fas fa-check-circle"></i> <span data-en="Arabic & English instruction" data-ar="تدريس بالعربي والإنجليزي">Arabic & English instruction</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Our Courses" data-ar="كورساتنا">Our Courses</div>
+      <h2 class="section-title" data-en="What We Teach" data-ar="ماذا ندرس">What We Teach</h2>
+      <p class="section-desc" data-en="Comprehensive mathematics courses for all levels, curricula, and goals." data-ar="كورسات رياضيات شاملة لجميع المستويات والمناهج والأهداف.">Comprehensive mathematics courses for all levels, curricula, and goals.</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card reveal"><div class="course-icon">🔢</div><div class="course-tag">Foundation</div><h3 data-en="Algebra" data-ar="الجبر">Algebra</h3><p data-en="Equations, inequalities, polynomials, and functions — from basics to advanced topics." data-ar="المعادلات والمتباينات والكثيرات الحدود والدوال من الأساسيات إلى المواضيع المتقدمة.">Equations, inequalities, polynomials, and functions — from basics to advanced.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">📐</div><div class="course-tag">Core</div><h3 data-en="Geometry" data-ar="الهندسة">Geometry</h3><p data-en="Shapes, proofs, triangles, circles, and coordinate geometry explained visually." data-ar="الأشكال والإثباتات والمثلثات والدوائر والهندسة الإحداثية بشرح بصري.">Shapes, proofs, triangles, circles, and coordinate geometry explained visually.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">∫</div><div class="course-tag">Advanced</div><h3 data-en="Calculus" data-ar="حساب التفاضل والتكامل">Calculus</h3><p data-en="Limits, derivatives, integrals and their applications in science and engineering." data-ar="النهايات والمشتقات والتكاملات وتطبيقاتها في العلوم والهندسة.">Limits, derivatives, integrals and their applications in science and engineering.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">📊</div><div class="course-tag">Core</div><h3 data-en="Trigonometry" data-ar="حساب المثلثات">Trigonometry</h3><p data-en="Sine, cosine, tangent and identities — mastered through clear patterns and practice." data-ar="الجيب وجيب التمام والظل والمتطابقات — تعلمها بأنماط واضحة وممارسة.">Sine, cosine, tangent and identities mastered through clear patterns and practice.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">🎓</div><div class="course-tag">Exam Prep</div><h3 data-en="SAT Math" data-ar="SAT Math">SAT Math</h3><p data-en="Targeted SAT math preparation with strategy, timed drills, and full practice tests." data-ar="تحضير موجه لـ SAT Math مع استراتيجيات وتمارين موقوتة واختبارات كاملة.">Targeted SAT math preparation with strategy, timed drills, and full practice tests.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">🌍</div><div class="course-tag">International</div><h3 data-en="IGCSE Math" data-ar="IGCSE Math">IGCSE Math</h3><p data-en="Cambridge IGCSE curriculum fully covered — past papers, marking schemes, and tips." data-ar="المنهج الكامل لـ IGCSE كامبريدج — أوراق السنوات الماضية ومخططات التصحيح.">Cambridge IGCSE curriculum fully covered — past papers, marking schemes, and tips.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">🇺🇸</div><div class="course-tag">Curriculum</div><h3 data-en="American Curriculum" data-ar="المنهج الأمريكي">American Curriculum</h3><p data-en="Common Core aligned math for all grade levels — Pre-K through 12th grade." data-ar="رياضيات متوافقة مع Core Common لجميع الصفوف من الروضة حتى الثانوية.">Common Core aligned math for all grade levels — Pre-K through 12th grade.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+      <div class="course-card reveal"><div class="course-icon">🇪🇬</div><div class="course-tag">Curriculum</div><h3 data-en="National Curriculum" data-ar="المنهج الوطني">National Curriculum</h3><p data-en="Egyptian national curriculum from primary to high school — Arabic and English." data-ar="المنهج الوطني المصري من الابتدائي إلى الثانوي — عربي وإنجليزي.">Egyptian national curriculum from primary to high school — Arabic and English.</p><button class="btn-sm" data-en="Learn More →" data-ar="اعرف المزيد →">Learn More →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Why Math Academy" data-ar="لماذا Math Academy">Why Math Academy</div>
+      <h2 class="section-title" data-en="Learn the Right Way" data-ar="تعلم بالطريقة الصحيحة">Learn the Right Way</h2>
+      <p class="section-desc" data-en="We've helped over 1000 students build confidence and achieve top grades." data-ar="ساعدنا أكثر من 1000 طالب على بناء الثقة وتحقيق أعلى الدرجات.">We've helped over 1000 students build confidence and achieve top grades.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(79,124,248,0.15);color:#4f7cf8">💡</div><h3 data-en="Easy Explanation" data-ar="شرح سهل">Easy Explanation</h3><p data-en="Complex topics broken into simple, digestible steps that click instantly." data-ar="مواضيع معقدة مقسمة إلى خطوات بسيطة تفهمها بسرعة.">Complex topics broken into simple, digestible steps that click instantly.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(124,95,245,0.15);color:#7c5ff5">🎯</div><h3 data-en="Interactive Classes" data-ar="حصص تفاعلية">Interactive Classes</h3><p data-en="Live online sessions with shared boards, real-time problem solving." data-ar="جلسات أونلاين مباشرة مع لوحات مشتركة وحل مسائل آني.">Live online sessions with shared boards and real-time problem solving.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(34,211,238,0.15);color:#22d3ee">👤</div><h3 data-en="One-on-One Sessions" data-ar="جلسات فردية">One-on-One Sessions</h3><p data-en="Dedicated attention focused entirely on your learning pace and needs." data-ar="اهتمام كامل مخصص بالكامل لوتيرتك واحتياجاتك في التعلم.">Dedicated attention focused entirely on your learning pace and needs.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(248,200,79,0.15);color:#f8c84f">📚</div><h3 data-en="Homework Support" data-ar="دعم الواجبات">Homework Support</h3><p data-en="Get help with homework, assignments and weekly review between classes." data-ar="احصل على مساعدة في الواجبات والمهام والمراجعة الأسبوعية بين الحصص.">Get help with homework, assignments and weekly review between classes.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(239,68,68,0.15);color:#ef4444">📝</div><h3 data-en="Exam Preparation" data-ar="تحضير الامتحانات">Exam Preparation</h3><p data-en="Targeted exam revision, past papers, timed practice and strategy sessions." data-ar="مراجعة موجهة للامتحانات وأوراق سابقة وتمارين موقوتة وجلسات استراتيجية.">Targeted exam revision, past papers, timed practice and strategy sessions.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(34,197,94,0.15);color:#22c55e">🎬</div><h3 data-en="Recorded Sessions" data-ar="جلسات مسجلة">Recorded Sessions</h3><p data-en="Never miss content — every lesson recorded and available to replay anytime." data-ar="لا تفوت أي محتوى — كل درس مسجل ومتاح للمشاهدة في أي وقت.">Never miss content — every lesson recorded and available to replay anytime.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(79,124,248,0.15);color:#4f7cf8">🌐</div><h3 data-en="Online Learning" data-ar="التعلم أونلاين">Online Learning</h3><p data-en="Learn from anywhere — all you need is a device and an internet connection." data-ar="تعلم من أي مكان — كل ما تحتاجه هو جهاز واتصال بالإنترنت.">Learn from anywhere — all you need is a device and an internet connection.</p></div>
+      <div class="why-card reveal"><div class="why-icon" style="background:rgba(124,95,245,0.15);color:#7c5ff5">🌍</div><h3 data-en="Bilingual Teaching" data-ar="تدريس ثنائي اللغة">Bilingual Teaching</h3><p data-en="Instruction in Arabic or English — or both — according to student preference." data-ar="التدريس بالعربية أو الإنجليزية أو كليهما حسب تفضيل الطالب.">Instruction in Arabic or English — or both — according to student preference.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card reveal"><span class="stat-number" data-target="1000">0</span><span class="stat-label" data-en="Students Taught" data-ar="طالب تعلم">Students Taught</span></div>
+      <div class="stat-card reveal"><span class="stat-number" data-target="50">0</span><span class="stat-label" data-en="Courses Available" data-ar="كورس متاح">Courses Available</span></div>
+      <div class="stat-card reveal"><span class="stat-number" data-target="95">0</span><span class="stat-label" data-en="Success Rate %" data-ar="نسبة النجاح %">Success Rate %</span></div>
+      <div class="stat-card reveal"><span class="stat-number" data-target="10">0</span><span class="stat-label" data-en="Years Experience" data-ar="سنوات خبرة">Years Experience</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Simple Pricing" data-ar="أسعار واضحة">Simple Pricing</div>
+      <h2 class="section-title" data-en="Transparent & Affordable" data-ar="شفاف وبأسعار معقولة">Transparent & Affordable</h2>
+      <p class="section-desc" data-en="No hidden fees, no complicated packages. Just great teaching at a fair price." data-ar="لا رسوم خفية، لا باقات معقدة. فقط تدريس رائع بسعر عادل.">No hidden fees, no complicated packages. Just great teaching at a fair price.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-badge" data-en="Try First" data-ar="جرب أولاً">Try First</div>
+        <div class="pricing-icon">🎁</div>
+        <h3 class="pricing-name" data-en="Free Trial" data-ar="جلسة مجانية">Free Trial</h3>
+        <div class="pricing-price"><span class="price-amount">$0</span><span class="price-per" data-en="/session" data-ar="/جلسة">/session</span></div>
+        <div class="pricing-duration"><i class="fas fa-clock"></i> <span data-en="1 Hour Session" data-ar="جلسة مدتها ساعة">1 Hour Session</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> <span data-en="Full 60-minute lesson" data-ar="درس كامل 60 دقيقة">Full 60-minute lesson</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Level assessment" data-ar="تقييم المستوى">Level assessment</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Learning plan discussion" data-ar="نقاش خطة التعلم">Learning plan discussion</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="No commitment required" data-ar="بدون أي التزام">No commitment required</span></li>
+        </ul>
+        <a href="#booking" class="btn-outline" style="width:100%;justify-content:center;margin-top:auto;"><span data-en="Book Free Session" data-ar="احجز مجاناً">Book Free Session</span></a>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge featured-badge" data-en="Most Popular" data-ar="الأكثر طلباً">Most Popular</div>
+        <div class="pricing-icon">⭐</div>
+        <h3 class="pricing-name" data-en="Standard Session" data-ar="الجلسة العادية">Standard Session</h3>
+        <div class="pricing-price"><span class="price-amount">$10</span><span class="price-per" data-en="/session" data-ar="/جلسة">/session</span></div>
+        <div class="pricing-duration"><i class="fas fa-clock"></i> <span data-en="1 Hour Session" data-ar="جلسة مدتها ساعة">1 Hour Session</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> <span data-en="Full 60-minute lesson" data-ar="درس كامل 60 دقيقة">Full 60-minute lesson</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Interactive whiteboard" data-ar="لوح تفاعلي">Interactive whiteboard</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Session recording" data-ar="تسجيل الجلسة">Session recording</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Homework support" data-ar="دعم الواجبات">Homework support</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Arabic & English" data-ar="عربي وإنجليزي">Arabic & English</span></li>
+        </ul>
+        <a href="https://wa.me/201159744635" target="_blank" class="btn-primary" style="width:100%;justify-content:center;margin-top:auto;"><i class="fab fa-whatsapp"></i> <span data-en="Book Now" data-ar="احجز الآن">Book Now</span></a>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-badge" data-en="Best Value" data-ar="أفضل قيمة">Best Value</div>
+        <div class="pricing-icon">🚀</div>
+        <h3 class="pricing-name" data-en="Monthly Bundle" data-ar="باقة شهرية">Monthly Bundle</h3>
+        <div class="pricing-price"><span class="price-amount">$80</span><span class="price-per" data-en="/month" data-ar="/شهر">/month</span></div>
+        <div class="pricing-duration"><i class="fas fa-clock"></i> <span data-en="8 Hours (2×/week)" data-ar="8 ساعات (مرتين أسبوعياً)">8 Hours (2×/week)</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> <span data-en="8 x 1-hour sessions" data-ar="8 جلسات ساعة كاملة">8 x 1-hour sessions</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Save $0 per session" data-ar="وفر في كل جلسة">Priority scheduling</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Progress reports" data-ar="تقارير تقدم">Progress reports</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="Exam prep resources" data-ar="موارد تحضير الامتحانات">Exam prep resources</span></li>
+          <li><i class="fas fa-check"></i> <span data-en="All sessions recorded" data-ar="جميع الجلسات مسجلة">All sessions recorded</span></li>
+        </ul>
+        <a href="https://wa.me/201159744635" target="_blank" class="btn-outline" style="width:100%;justify-content:center;margin-top:auto;"><span data-en="Get Bundle" data-ar="احصل على الباقة">Get Bundle</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Student Reviews" data-ar="آراء الطلاب">Student Reviews</div>
+      <h2 class="section-title" data-en="What Our Students Say" data-ar="ماذا يقول طلابنا">What Our Students Say</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="Mr. Mohamed made calculus feel effortless. His step-by-step approach and patience are unmatched. I improved my grade from C to A in just 2 months!" data-ar="الأستاذ محمد جعل حساب التفاضل والتكامل سهلاً. أسلوبه خطوة بخطوة وصبره لا مثيل لهما. تحسنت درجتي من C إلى A في شهرين فقط!">Mr. Mohamed made calculus feel effortless. His step-by-step approach and patience are unmatched. I improved from C to A in 2 months!</p>
+        <div class="review-author"><div class="review-avatar">S</div><div><div class="review-name">Sarah M.</div><div class="review-info" data-en="IGCSE Student — UK" data-ar="طالبة IGCSE — المملكة المتحدة">IGCSE Student — UK</div></div></div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="أفضل معلم رياضيات على الإطلاق. شرحه واضح ومبسط وبيحبب الطالب في المادة. ابني كان يكره الرياضيات وهلأ بيحبها!" data-en-text="Best math teacher ever. My son used to hate math, now he loves it thanks to Mr. Mohamed's clear and simple explanations.">أفضل معلم رياضيات على الإطلاق. شرحه واضح ومبسط وبيحبب الطالب في المادة. ابني كان يكره الرياضيات وهلأ بيحبها!</p>
+        <div class="review-author"><div class="review-avatar">أ</div><div><div class="review-name">أم أحمد</div><div class="review-info" data-en="Parent — Egypt" data-ar="أم — مصر">أم — مصر</div></div></div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="Scored 780 on SAT Math after just 3 months of sessions. The practice tests and strategy sessions were game-changers. Highly recommend!" data-ar="حصلت على 780 في SAT Math بعد 3 أشهر فقط. الاختبارات التدريبية وجلسات الاستراتيجية كانت غيرت كل شيء.">Scored 780 on SAT Math after just 3 months of sessions. The practice tests and strategy sessions were game-changers!</p>
+        <div class="review-author"><div class="review-avatar">K</div><div><div class="review-name">Khaled A.</div><div class="review-info" data-en="SAT Student — Saudi Arabia" data-ar="طالب SAT — السعودية">SAT Student — Saudi Arabia</div></div></div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="The recorded sessions are a lifesaver. I can review any lesson at any time. Mr. Mohamed's teaching style is clear and engaging — worth every penny." data-ar="الجلسات المسجلة منقذة للحياة. أستطيع مراجعة أي درس في أي وقت. أسلوب الأستاذ محمد واضح وجذاب.">The recorded sessions are a lifesaver. I can review any lesson anytime. Teaching style is clear and engaging!</p>
+        <div class="review-author"><div class="review-avatar">L</div><div><div class="review-name">Lina T.</div><div class="review-info" data-en="American Curriculum — UAE" data-ar="منهج أمريكي — الإمارات">American Curriculum — UAE</div></div></div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="الأستاذ محمد بيشرح بطريقة بتخلي المادة سهلة جداً. حضرت معه كورس الجبر وعدت درجاتي تتحسن من أول ما بدأت." data-en-text="Mr. Mohamed explains in a way that makes the subject feel very easy. I took the algebra course and my grades improved from the first session.">الأستاذ محمد بيشرح بطريقة بتخلي المادة سهلة جداً. حضرت معه كورس الجبر وعدت درجاتي تتحسن من أول ما بدأت.</p>
+        <div class="review-author"><div class="review-avatar">م</div><div><div class="review-name">محمد ع.</div><div class="review-info" data-en="National Curriculum — Egypt" data-ar="منهج وطني — مصر">منهج وطني — مصر</div></div></div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="review-text" data-en="Excellent teacher! He adapts to each student's level. My daughter struggled with geometry and after 6 weeks she's now the top student in her class." data-ar="معلم ممتاز! يتكيف مع مستوى كل طالب. ابنتي كانت تعاني مع الهندسة وبعد 6 أسابيع أصبحت الأولى في فصلها.">Excellent teacher! He adapts to each student's level. After 6 weeks my daughter went from struggling to top of her class.</p>
+        <div class="review-author"><div class="review-avatar">R</div><div><div class="review-name">Rania H.</div><div class="review-info" data-en="Parent — Jordan" data-ar="أم — الأردن">Parent — Jordan</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Book a Session" data-ar="احجز جلسة">Book a Session</div>
+      <h2 class="section-title" data-en="Start Your Free Trial" data-ar="ابدأ تجربتك المجانية">Start Your Free Trial</h2>
+      <p class="section-desc" data-en="Fill the form and we'll reach you on WhatsApp within 24 hours. Sessions are $10/hr — first session FREE!" data-ar="املأ النموذج وسنتواصل معك على واتساب خلال 24 ساعة. الجلسات بـ 10 دولار للساعة — الجلسة الأولى مجانية!">Fill the form and we'll reach you on WhatsApp within 24 hours. Sessions are $10/hr — first session FREE!</p>
+    </div>
+    <div class="booking-wrapper reveal">
+      <div class="form-grid">
+        <div class="form-group">
+          <label data-en="Full Name" data-ar="الاسم الكامل">Full Name</label>
+          <input type="text" id="f-name" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label data-en="Country" data-ar="الدولة">Country</label>
+          <input type="text" id="f-country" placeholder="Egypt, UAE, UK..." />
+        </div>
+        <div class="form-group">
+          <label data-en="Grade / Level" data-ar="الصف / المستوى">Grade / Level</label>
+          <select id="f-grade">
+            <option value="">-- Select --</option>
+            <option>Primary (Grades 1-6)</option>
+            <option>Middle School (Grades 7-9)</option>
+            <option>High School (Grades 10-12)</option>
+            <option>University Level</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-en="Curriculum" data-ar="المنهج">Curriculum</label>
+          <select id="f-curriculum">
+            <option value="">-- Select --</option>
+            <option>IGCSE / Cambridge</option>
+            <option>SAT Preparation</option>
+            <option>American Curriculum</option>
+            <option>Egyptian National</option>
+            <option>British Curriculum</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-en="Phone / WhatsApp" data-ar="رقم الهاتف / واتساب">Phone / WhatsApp</label>
+          <input type="tel" id="f-phone" placeholder="+20 100 000 0000" />
+        </div>
+        <div class="form-group">
+          <label data-en="Preferred Time" data-ar="الوقت المفضل">Preferred Time</label>
+          <input type="text" id="f-time" placeholder="e.g. Weekdays 5-7 PM" />
+        </div>
+        <div class="form-group full">
+          <label data-en="Message (Optional)" data-ar="رسالة (اختياري)">Message (Optional)</label>
+          <textarea id="f-msg" rows="3" placeholder="Tell us about your goals or what you need help with..."></textarea>
+        </div>
+        <div class="form-group full">
+          <button class="btn-primary" style="width:100%;justify-content:center;padding:16px;" onclick="submitForm()">
+            <i class="fab fa-whatsapp"></i>
+            <span data-en="Send via WhatsApp" data-ar="أرسل عبر واتساب">Send via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Math Blog" data-ar="مدونة الرياضيات">Math Blog</div>
+      <h2 class="section-title" data-en="Learn & Explore" data-ar="تعلم واستكشف">Learn & Explore</h2>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card reveal"><div class="blog-thumb">📐</div><div class="blog-body"><div class="blog-meta" data-en="Geometry • 5 min read" data-ar="هندسة • 5 دقائق">Geometry • 5 min read</div><h3 data-en="5 Tricks to Solve Geometry Proofs Faster" data-ar="5 حيل لحل إثباتات الهندسة بشكل أسرع">5 Tricks to Solve Geometry Proofs Faster</h3><p data-en="Master the art of geometric reasoning with these five proven strategies used by top students." data-ar="أتقن فن الاستدلال الهندسي بهذه الاستراتيجيات الخمس المثبتة التي يستخدمها الطلاب المتفوقون.">Master the art of geometric reasoning with these five proven strategies used by top students.</p></div></div>
+      <div class="blog-card reveal"><div class="blog-thumb">∫</div><div class="blog-body"><div class="blog-meta" data-en="Calculus • 8 min read" data-ar="تفاضل وتكامل • 8 دقائق">Calculus • 8 min read</div><h3 data-en="Understanding Derivatives: The Intuitive Way" data-ar="فهم المشتقات: الطريقة البديهية">Understanding Derivatives: The Intuitive Way</h3><p data-en="Stop memorizing rules and start understanding why derivatives work the way they do." data-ar="توقف عن حفظ القواعد وابدأ في فهم سبب عمل المشتقات بالطريقة التي تعمل بها.">Stop memorizing rules and start understanding why derivatives work the way they do.</p></div></div>
+      <div class="blog-card reveal"><div class="blog-thumb">🎓</div><div class="blog-body"><div class="blog-meta" data-en="SAT Prep • 6 min read" data-ar="تحضير SAT • 6 دقائق">SAT Prep • 6 min read</div><h3 data-en="SAT Math: The 10 Most Common Question Types" data-ar="SAT Math: أكثر 10 أنواع أسئلة شيوعاً">SAT Math: The 10 Most Common Question Types</h3><p data-en="Know what to expect and maximize your score with this complete breakdown of SAT math sections." data-ar="اعرف ما يمكن توقعه وحقق أقصى درجة مع هذا التحليل الكامل لأقسام SAT Math.">Know what to expect and maximize your score with this complete breakdown of SAT math sections.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Session Schedule • 1 Hour Each" data-ar="جدول الجلسات • ساعة لكل جلسة">Session Schedule • 1 Hour Each</div>
+      <h2 class="section-title" data-en="Available Times" data-ar="الأوقات المتاحة">Available Times</h2>
+    </div>
+    <div class="schedule-table reveal">
+      <div class="schedule-row header">
+        <span data-en="Day" data-ar="اليوم">Day</span>
+        <span data-en="Available Hours" data-ar="الساعات المتاحة">Available Hours</span>
+        <span data-en="Status" data-ar="الحالة">Status</span>
+      </div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Monday" data-ar="الإثنين">Monday</span><span class="schedule-time">4:00 PM – 10:00 PM (Cairo)</span><span><div class="badge badge-open">Open</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Tuesday" data-ar="الثلاثاء">Tuesday</span><span class="schedule-time">4:00 PM – 10:00 PM (Cairo)</span><span><div class="badge badge-open">Open</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Wednesday" data-ar="الأربعاء">Wednesday</span><span class="schedule-time">5:00 PM – 9:00 PM (Cairo)</span><span><div class="badge badge-few">Few Slots</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Thursday" data-ar="الخميس">Thursday</span><span class="schedule-time">4:00 PM – 10:00 PM (Cairo)</span><span><div class="badge badge-open">Open</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Friday" data-ar="الجمعة">Friday</span><span class="schedule-time">10:00 AM – 2:00 PM (Cairo)</span><span><div class="badge badge-few">Few Slots</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Saturday" data-ar="السبت">Saturday</span><span class="schedule-time">2:00 PM – 8:00 PM (Cairo)</span><span><div class="badge badge-open">Open</div></span></div>
+      <div class="schedule-row"><span class="schedule-day" data-en="Sunday" data-ar="الأحد">Sunday</span><span class="schedule-time">Fully Booked</span><span><div class="badge badge-full">Full</div></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Certificates & Achievements" data-ar="الشهادات والإنجازات">Certificates & Achievements</div>
+      <h2 class="section-title" data-en="Trusted Qualifications" data-ar="مؤهلات موثوقة">Trusted Qualifications</h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card reveal"><div class="cert-icon">🏆</div><h3 data-en="Top Rated Tutor" data-ar="معلم الأعلى تقييماً">Top Rated Tutor</h3><p data-en="Consistently rated 5-stars by students and parents across platforms." data-ar="تقييم 5 نجوم باستمرار من الطلاب وأولياء الأمور.">Consistently rated 5-stars by students and parents.</p></div>
+      <div class="cert-card reveal"><div class="cert-icon">📜</div><h3 data-en="Cambridge Certified" data-ar="معتمد من كامبريدج">Cambridge Certified</h3><p data-en="Fully qualified to teach Cambridge IGCSE Mathematics curriculum." data-ar="مؤهل بالكامل لتدريس منهج Cambridge IGCSE Mathematics.">Fully qualified to teach Cambridge IGCSE Mathematics.</p></div>
+      <div class="cert-card reveal"><div class="cert-icon">🎓</div><h3 data-en="BSc Mathematics" data-ar="بكالوريوس رياضيات">BSc Mathematics</h3><p data-en="Bachelor of Science in Mathematics with honors from a top Egyptian university." data-ar="بكالوريوس العلوم في الرياضيات بمرتبة الشرف من جامعة مصرية مرموقة.">Bachelor of Science in Mathematics with honors.</p></div>
+      <div class="cert-card reveal"><div class="cert-icon">⭐</div><h3 data-en="10+ Years Teaching" data-ar="10+ سنوات تدريس">10+ Years Teaching</h3><p data-en="Over a decade of dedicated mathematics teaching and curriculum development." data-ar="أكثر من عقد من التدريس المتخصص وتطوير المناهج.">Over a decade of dedicated mathematics teaching.</p></div>
+      <div class="cert-card reveal"><div class="cert-icon">🌍</div><h3 data-en="International Students" data-ar="طلاب دوليون">International Students</h3><p data-en="Experience with students from 20+ countries across different curricula." data-ar="خبرة مع طلاب من أكثر من 20 دولة عبر مناهج مختلفة.">Experience with students from 20+ countries.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="FAQ" data-ar="الأسئلة الشائعة">FAQ</div>
+      <h2 class="section-title" data-en="Common Questions" data-ar="أسئلة شائعة">Common Questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="How do online sessions work?" data-ar="كيف تعمل الجلسات الأونلاين؟">How do online sessions work?</span><i class="fas fa-plus"></i></button><div class="faq-a"><p data-en="Sessions are conducted via Zoom or Google Meet. You'll receive a link before each session. All you need is a device with internet. Sessions can be recorded for later review." data-ar="تُعقد الجلسات عبر Zoom أو Google Meet. ستتلقى رابطاً قبل كل جلسة. كل ما تحتاجه هو جهاز بإنترنت. يمكن تسجيل الجلسات للمراجعة لاحقاً.">Sessions are conducted via Zoom or Google Meet. You'll receive a link before each session. All you need is a device with internet. Sessions can be recorded for later review.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="What is the cost of a session?" data-ar="كم يكلف الجلسة؟">What is the cost of a session?</span><i class="fas fa-plus"></i></button><div class="faq-a"><p data-en="Each session is $10 USD per hour. Sessions are exactly 1 hour long. The first trial session is FREE — no commitment needed! Contact us on WhatsApp to get started." data-ar="كل جلسة بـ 10 دولار للساعة الواحدة. مدة الجلسة ساعة كاملة. الجلسة التجريبية الأولى مجانية — بدون أي التزام! تواصل معنا على واتساب للبدء.">Each session is $10 USD per hour. Sessions are exactly 1 hour long. First trial is FREE — no commitment needed!</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Do you teach in Arabic?" data-ar="هل تُدرّس بالعربي؟">Do you teach in Arabic?</span><i class="fas fa-plus"></i></button><div class="faq-a"><p data-en="Yes! Mr. Mohamed teaches in both Arabic and English. For Arabic-speaking students, sessions are fully in Arabic. For international students, sessions are in English. Bilingual also available." data-ar="نعم! الأستاذ محمد يُدرّس بالعربية والإنجليزية معاً. للطلاب الناطقين بالعربية، الجلسات كاملاً بالعربية. وللطلاب الدوليين بالإنجليزية. ثنائي اللغة متاح أيضاً.">Yes! Mr. Mohamed teaches in both Arabic and English, or both together.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Can I reschedule a session?" data-ar="هل يمكنني إعادة جدولة الجلسة؟">Can I reschedule a session?</span><i class="fas fa-plus"></i></button><div class="faq-a"><p data-en="Yes, sessions can be rescheduled with at least 24 hours notice via WhatsApp. We try to be as flexible as possible to accommodate your schedule." data-ar="نعم، يمكن إعادة جدولة الجلسات مع إشعار مسبق لا يقل عن 24 ساعة عبر واتساب. نحاول أن نكون مرنين قدر الإمكان.">Yes, with 24 hours notice via WhatsApp. We're as flexible as possible.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="What age groups do you teach?" data-ar="ما الفئات العمرية التي تُدرّسها؟">What age groups do you teach?</span><i class="fas fa-plus"></i></button><div class="faq-a"><p data-en="We teach students from Grade 4 all the way through university level. Whether your child needs basic arithmetic help or you need university-level calculus, we have you covered." data-ar="ندرّس الطلاب من الصف الرابع الابتدائي حتى مستوى الجامعة. سواء احتاج طفلك مساعدة في الحساب الأساسي أو تحتاج لحساب التفاضل والتكامل الجامعي.">We teach Grade 4 through university level — all ages welcome.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="container">
+    <div class="newsletter-box reveal">
+      <div class="section-tag" data-en="Stay Updated" data-ar="ابقَ على اطلاع">Stay Updated</div>
+      <h2 class="section-title" data-en="Get Free Math Tips" data-ar="احصل على نصائح رياضيات مجانية">Get Free Math Tips</h2>
+      <p class="section-desc" data-en="Subscribe for weekly math tips, tricks, and resources delivered to your inbox." data-ar="اشترك للحصول على نصائح وحيل ومصادر رياضيات أسبوعية في بريدك الإلكتروني.">Subscribe for weekly math tips, tricks, and resources delivered to your inbox.</p>
+      <div class="newsletter-form">
+        <input type="email" id="nl-email" placeholder="your@email.com" />
+        <button class="btn-primary" onclick="subscribeNewsletter()"><i class="fas fa-paper-plane"></i> <span data-en="Subscribe" data-ar="اشترك">Subscribe</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-en="Contact Us" data-ar="تواصل معنا">Contact Us</div>
+      <h2 class="section-title" data-en="Get In Touch" data-ar="تواصل معنا">Get In Touch</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h2 data-en="We'd Love to Hear From You" data-ar="يسعدنا سماعك">We'd Love to Hear From You</h2>
+        <p data-en="Reach out on WhatsApp for the fastest response. We're available 7 days a week and will get back to you within a few hours." data-ar="تواصل معنا على واتساب للرد الأسرع. نحن متاحون 7 أيام في الأسبوع وسنرد عليك خلال ساعات قليلة.">Reach out on WhatsApp for the fastest response. Available 7 days a week.</p>
+        <div class="contact-items">
+          <div class="contact-item"><div class="contact-item-icon"><i class="fab fa-whatsapp" style="color:#fff"></i></div><div class="contact-item-text"><span data-en="WhatsApp / Phone" data-ar="واتساب / هاتف">WhatsApp / Phone</span><a href="https://wa.me/201159744635" target="_blank">+20 115 974 4635</a></div></div>
+          <div class="contact-item"><div class="contact-item-icon"><i class="fas fa-envelope" style="color:#fff"></i></div><div class="contact-item-text"><span data-en="Email" data-ar="البريد الإلكتروني">Email</span><a href="mailto:info@mathacademy.com">info@mathacademy.com</a></div></div>
+          <div class="contact-item"><div class="contact-item-icon"><i class="fas fa-map-marker-alt" style="color:#fff"></i></div><div class="contact-item-text"><span data-en="Location" data-ar="الموقع">Location</span><a href="#">Egypt (Teaching Worldwide Online)</a></div></div>
+        </div>
+        <div class="socials">
+          <a href="#" class="social-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn" title="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="contact-map-placeholder reveal">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <strong data-en="Available Online — Worldwide" data-ar="متاح أونلاين — في أي مكان">Available Online — Worldwide</strong>
+        <p style="color:var(--text2);font-size:0.88rem;text-align:center;max-width:220px;" data-en="Students from Egypt, Saudi Arabia, UAE, UK, USA and more." data-ar="طلاب من مصر والسعودية والإمارات والمملكة المتحدة والولايات المتحدة والمزيد.">Students from Egypt, Saudi Arabia, UAE, UK, USA and more.</p>
+        <a href="https://wa.me/201159744635" target="_blank" class="btn-wa"><i class="fab fa-whatsapp"></i> <span data-en="Chat Now" data-ar="تحدث الآن">Chat Now</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#hero" class="nav-logo">∑ Math Academy</a>
+        <p data-en="Professional mathematics education for Arab and international students. Building confidence, one equation at a time." data-ar="تعليم رياضيات احترافي للطلاب العرب والدوليين. بناء الثقة، معادلة تلو الأخرى.">Professional mathematics education for Arab and international students. Building confidence, one equation at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Courses" data-ar="الكورسات">Courses</h4>
+        <ul>
+          <li><a href="#courses">Algebra</a></li>
+          <li><a href="#courses">Geometry</a></li>
+          <li><a href="#courses">Calculus</a></li>
+          <li><a href="#courses">SAT Math</a></li>
+          <li><a href="#courses">IGCSE Math</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Academy" data-ar="الأكاديمية">Academy</h4>
+        <ul>
+          <li><a href="#about" data-en="About Us" data-ar="عن الأكاديمية">About Us</a></li>
+          <li><a href="#why" data-en="Why Us" data-ar="لماذا نحن">Why Us</a></li>
+          <li><a href="#schedule" data-en="Schedule" data-ar="الجدول">Schedule</a></li>
+          <li><a href="#certs" data-en="Certificates" data-ar="الشهادات">Certificates</a></li>
+          <li><a href="#blog" data-en="Blog" data-ar="المدونة">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Connect" data-ar="تواصل">Connect</h4>
+        <ul>
+          <li><a href="https://wa.me/201159744635" target="_blank">WhatsApp</a></li>
+          <li><a href="#contact">Facebook</a></li>
+          <li><a href="#contact">Instagram</a></li>
+          <li><a href="#contact">TikTok</a></li>
+          <li><a href="#contact">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-en="© 2025 Math Academy by Mr. Mohamed Saad. All rights reserved." data-ar="© 2025 Math Academy بواسطة أ. محمد سعد. جميع الحقوق محفوظة.">© 2025 Math Academy by <span>Mr. Mohamed Saad</span>. All rights reserved.</span>
+      <span>+20 115 974 4635</span>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/201159744635" id="wa-float" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+<!-- BACK TO TOP -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<!-- AI CHAT -->
+<div id="ai-chat">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <span>∑ Math Assistant</span>
+      <button class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chat-messages" id="chat-msgs">
+      <div class="msg bot" id="bot-greeting">Hi! I'm the Math Academy assistant. Ask me anything about our courses, schedules, or pricing! 👋</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-in" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendChat()" />
+      <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()"><i class="fas fa-robot"></i></button>
+</div>
+
+<script>
+// ─── LOADER ───
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const l = document.getElementById('loader');
+    l.classList.add('loader-hide');
+    setTimeout(() => l.remove(), 500);
+  }, 1800);
+});
+
+// ─── SCROLL PROGRESS ───
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  const bt = document.getElementById('back-top');
+  if (window.scrollY > 400) bt.classList.add('show'); else bt.classList.remove('show');
+});
+
+// ─── HERO CANVAS ───
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const symbols = ['∑', '∫', 'π', '√', 'α', 'β', 'θ', '∞', '÷', '×', '≈', 'Δ', '∂', 'λ', '±', 'f(x)', 'x²', 'y=mx+b'];
+function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+    symbol: symbols[Math.floor(Math.random() * symbols.length)],
+    size: 12 + Math.random() * 16, opacity: 0.05 + Math.random() * 0.12,
+    color: ['#fd8c00','#e84393','#22bcd4','#ffd347'][Math.floor(Math.random()*4)]
+  };
+}
+for (let i = 0; i < 50; i++) particles.push(createParticle());
+function animCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.save(); ctx.globalAlpha = p.opacity;
+    ctx.fillStyle = p.color; ctx.font = `${p.size}px 'Syne', sans-serif`;
+    ctx.fillText(p.symbol, p.x, p.y); ctx.restore();
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < -50) p.x = canvas.width + 50;
+    if (p.x > canvas.width + 50) p.x = -50;
+    if (p.y < -50) p.y = canvas.height + 50;
+    if (p.y > canvas.height + 50) p.y = -50;
+  });
+  requestAnimationFrame(animCanvas);
+}
+animCanvas();
+
+// ─── REVEAL ON SCROLL ───
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ─── STATS COUNTER ───
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const target = +el.dataset.target;
+      const isPercent = el.nextElementSibling?.textContent?.includes('%');
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = (current >= target ? target : Math.floor(current)) + (target >= 1000 ? '+' : isPercent ? '%' : '+');
+        if (current >= target) clearInterval(timer);
+      }, 25);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+// ─── THEME ───
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  document.getElementById('theme-btn').innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+
+// ─── LANGUAGE ───
+let currentLang = 'en';
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'ar' : 'en';
+  const html = document.documentElement;
+  html.dataset.lang = currentLang;
+  html.lang = currentLang;
+  html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('lang-label').textContent = currentLang === 'en' ? 'AR' : 'EN';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const text = el.dataset[currentLang];
+    if (text) el.textContent = text;
+  });
+  // Update bot greeting
+  const greet = document.getElementById('bot-greeting');
+  if(greet) greet.textContent = currentLang === 'ar' ? 'مرحباً! أنا مساعد Math Academy. اسألني عن الكورسات أو الأسعار أو الجدول! 👋' : 'Hi! I\'m the Math Academy assistant. Ask me anything about our courses, schedules, or pricing! 👋';
+  // Update placeholders
+  document.getElementById('chat-in').placeholder = currentLang === 'ar' ? 'اكتب سؤالك...' : 'Ask a question...';
+  document.getElementById('search-input').placeholder = currentLang === 'ar' ? 'ابحث عن كورسات، مواضيع...' : 'Search courses, topics...';
+}
+
+// ─── MENU ───
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ─── FAQ ───
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ─── SEARCH ───
+function toggleSearch() {
+  document.getElementById('search-overlay').classList.toggle('open');
+  if (document.getElementById('search-overlay').classList.contains('open')) {
+    setTimeout(() => document.getElementById('search-input').focus(), 100);
+  }
+}
+document.getElementById('search-overlay').addEventListener('click', function(e) {
+  if (e.target === this) toggleSearch();
+});
+
+// ─── BOOKING FORM ───
+function submitForm() {
+  const name = document.getElementById('f-name').value;
+  const country = document.getElementById('f-country').value;
+  const grade = document.getElementById('f-grade').value;
+  const curriculum = document.getElementById('f-curriculum').value;
+  const phone = document.getElementById('f-phone').value;
+  const time = document.getElementById('f-time').value;
+  const msg = document.getElementById('f-msg').value;
+  if (!name || !phone) {
+    alert(currentLang === 'ar' ? 'يرجى إدخال الاسم ورقم الهاتف على الأقل.' : 'Please enter at least your name and phone number.');
+    return;
+  }
+  const text = `Hello Math Academy! I'd like to book a session.\n\n👤 Name: ${name}\n🌍 Country: ${country}\n📚 Grade: ${grade}\n📖 Curriculum: ${curriculum}\n📞 Phone: ${phone}\n🕐 Preferred Time: ${time}\n💬 Message: ${msg}\n\n💰 Session: $10/hr (1 hour) — I know the first trial is FREE!`;
+  window.open(`https://wa.me/201159744635?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+// ─── NEWSLETTER ───
+function subscribeNewsletter() {
+  const email = document.getElementById('nl-email').value;
+  if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+  alert(currentLang === 'ar' ? 'شكراً! تم الاشتراك بنجاح.' : 'Thank you! You\'ve subscribed successfully.');
+  document.getElementById('nl-email').value = '';
+}
+
+// ─── AI CHAT ───
+function toggleChat() {
+  document.getElementById('chat-window').classList.toggle('open');
+}
+const chatData = {
+  en: {
+    hello: "Hi there! How can I help you today? 😊",
+    price: "Sessions are $10 USD per hour (1 hour each). The first trial session is FREE! Book now on WhatsApp. 💰",
+    course: "We offer: Algebra, Geometry, Calculus, Trigonometry, SAT Math, IGCSE, American Curriculum, and National Curriculum. Which interests you?",
+    schedule: "Sessions are available Mon-Sat. Check the schedule section for available slots, or book directly on WhatsApp!",
+    arabic: "Yes! Mr. Mohamed teaches in both Arabic and English. Fully bilingual sessions available.",
+    default: "Great question! For detailed info, please contact us directly on WhatsApp: wa.me/201159744635 or book a FREE trial session above! 🎓"
+  },
+  ar: {
+    hello: "أهلاً! كيف يمكنني مساعدتك اليوم؟ 😊",
+    price: "سعر الجلسة 10 دولار للساعة الواحدة. الجلسة الأولى مجانية! احجز الآن على واتساب. 💰",
+    course: "نقدم: الجبر، الهندسة، التفاضل والتكامل، SAT، IGCSE، المنهج الأمريكي والوطني. أيها يهمك؟",
+    schedule: "الجلسات متاحة من الاثنين إلى السبت. تحقق من قسم الجدول أو احجز مباشرة على واتساب!",
+    default: "سؤال رائع! للمزيد من التفاصيل، تواصل معنا على واتساب: wa.me/201159744635 أو احجز جلسة تجريبية مجانية! 🎓"
+  }
+};
+function sendChat() {
+  const input = document.getElementById('chat-in');
+  const msgs = document.getElementById('chat-msgs');
+  const text = input.value.trim();
+  if (!text) return;
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user'; userDiv.textContent = text; msgs.appendChild(userDiv);
+  input.value = '';
+  setTimeout(() => {
+    const botDiv = document.createElement('div');
+    botDiv.className = 'msg bot';
+    const lw = text.toLowerCase();
+    const lang = currentLang;
+    const d = chatData[lang];
+    let reply = d.default;
+    if (lw.includes('hello') || lw.includes('hi') || lw.includes('مرحب') || lw.includes('أهلاً') || lw.includes('هلا')) reply = d.hello;
+    else if (lw.includes('price') || lw.includes('cost') || lw.includes('fee') || lw.includes('سعر') || lw.includes('كلف') || lw.includes('تكلف')) reply = d.price;
+    else if (lw.includes('course') || lw.includes('subject') || lw.includes('كورس') || lw.includes('مادة')) reply = d.course;
+    else if (lw.includes('schedule') || lw.includes('time') || lw.includes('جدول') || lw.includes('وقت')) reply = d.schedule;
+    else if (lw.includes('arabic') || lw.includes('عربي') || lw.includes('عربية')) reply = lang === 'ar' ? chatData.ar.arabic || d.default : chatData.en.arabic;
+    botDiv.textContent = reply;
+    msgs.appendChild(botDiv);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 700);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+</script>
+</body>
+</html>
